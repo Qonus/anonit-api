@@ -1,7 +1,7 @@
-from presidio_analyzer import PatternRecognizer, Pattern, RecognizerResult, AnalyzerEngine
+from presidio_analyzer import PatternRecognizer, Pattern, AnalyzerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
 from presidio_anonymizer import AnonymizerEngine, OperatorConfig
-from langdetector import detect_lang
+from lib.langdetector import detect_lang
 
 configuration = {"nlp_engine_name":"spacy", "models": [
     {"lang_code":'en', "model_name":"en_core_web_sm"},
@@ -48,7 +48,7 @@ analyzer.registry.add_recognizer(PatternRecognizer(
 
 anonymizer = AnonymizerEngine()
 
-def anonymize(text: str):
+def anonymize_text(text: str):
     lang = 'en' if detect_lang(text) == 'en' else 'ru'
     print(lang)
     
@@ -67,7 +67,7 @@ def anonymize(text: str):
 
 def main():
     text = input('enter your text: ')
-    print(anonymize(text))
+    print(anonymize_text(text))
 
 if (__name__ == "__main__"):
     main()
