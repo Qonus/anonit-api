@@ -7,7 +7,7 @@ app = FastAPI()
 class TextRequest(BaseModel):
     text: str
 
-@app.post("/analyze")
+@app.post("/anonymize")
 async def analyze_text(request: TextRequest):
     text = request.text
     result = anonymize(text)
