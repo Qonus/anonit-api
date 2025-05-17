@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from anonymize_text import anonymize_text
 from anonymize_image import anonymize_image
@@ -18,7 +18,7 @@ async def analyze_text(request: TextRequest):
     return result
 
 @app.post("/anonymize/image")
-async def anonymize_img(file: UploadFile = File(...)):
-    image_bytes = await file.read()
+async def anonymize_img(request: Request):
+    image_bytes = await request.body()
     anonymized_bytes = anonymize_image(image_bytes)
     return StreamingResponse(BytesIO(anonymized_bytes), media_type="image/jpeg")
