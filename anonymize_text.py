@@ -1,7 +1,7 @@
 from presidio_analyzer import PatternRecognizer, Pattern, AnalyzerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
 from presidio_anonymizer import AnonymizerEngine, OperatorConfig
-from lib.langdetector import detect_lang
+from langdetector import detect_lang
 
 configuration = {"nlp_engine_name":"spacy", "models": [
     {"lang_code":'en', "model_name":"en_core_web_sm"},
@@ -27,7 +27,6 @@ analyzer.registry.add_recognizer(PatternRecognizer(
     supported_entity="GENERIC_ID",
     patterns=[
         Pattern(name="long_number", regex=r"\b\d{8,20}\b", score=0.5),
-        Pattern(name="alphanum_id", regex=r"\b[A-Z]{2}[A-Z0-9]{6,30}\b", score=0.5),
         Pattern(name="snils_like", regex=r"\b\d{3}-\d{3}-\d{3} \d{2}\b", score=0.7),
         Pattern(name="card_like", regex=r"\b\d{4} \d{4} \d{4} \d{4}\b", score=0.6),
     ],
@@ -48,11 +47,14 @@ analyzer.registry.add_recognizer(PatternRecognizer(
 
 anonymizer = AnonymizerEngine()
 
-def anonymize_text(text: str):
+def analyze_text(text: str):
     lang = 'en' if detect_lang(text) == 'en' else 'ru'
     print(lang)
     
-    results = analyzer.analyze(text=text, language=lang)
+    return analyzer.analyze(text=text, language=lang)
+
+def anonymize_text(text: str):
+    results = analyze_text(text)
     
     operators = {}
     for res in results:
